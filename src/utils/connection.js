@@ -16,6 +16,7 @@ export function ConnectionProvider({ children }) {
   const connection = useMemo(() => new Connection(endpoint, 'recent'), [
     endpoint,
   ]);
+
   const sendConnection = useMemo(() => new Connection(endpoint, 'recent'), [
     endpoint,
   ]);
@@ -31,10 +32,6 @@ export function ConnectionProvider({ children }) {
 
 export function useConnection() {
   return useContext(ConnectionContext).connection;
-}
-
-export function useSendConnection() {
-  return useContext(ConnectionContext).sendConnection;
 }
 
 export function useConnectionConfig() {
@@ -68,13 +65,15 @@ export function useAccountInfo(publicKey) {
     if (!publicKey) {
       return;
     }
-    let previousData = null;
+    let previousInfo = null;
     const id = connection.onAccountChange(publicKey, (info) => {
-      if (info.data) {
-        if (!previousData || !previousData.equals(info.data)) {
-          previousData = info.data;
-          setCache(cacheKey, info);
-        }
+      if (
+        !previousInfo ||
+        !previousInfo.data.equals(info.data) ||
+        previousInfo.lamports !== info.lamports
+      ) {
+        previousInfo = info;
+        setCache(cacheKey, info);
       }
     });
     return () => connection.removeAccountChangeListener(id);
@@ -96,4 +95,8 @@ export function setInitialAccountInfo(connection, publicKey, accountInfo) {
 export function useAccountData(publicKey) {
   const [accountInfo] = useAccountInfo(publicKey);
   return accountInfo && accountInfo.data;
+}
+
+export function useSendConnection() {
+  return useContext(ConnectionContext).sendConnection;
 }

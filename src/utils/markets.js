@@ -29,15 +29,16 @@ export function useMarketsList() {
   return USE_MARKETS.filter(({ deprecated }) => !deprecated);
 }
 
-export function useAllMarkets() {
+export function useAllMarkets(customMarkets) {
   const connection = useConnection();
-  const [markets, setMarkets] = useState([]);
 
-  useEffect(() => {
-    const getAllMarkets = async () => {
-      const markets = [];
-      let marketInfo;
-      for (marketInfo of USE_MARKETS) {
+  const getAllMarkets = async () => {
+    const markets: Array<{
+      market: Market,
+      marketName: string,
+      programId: PublicKey,
+    } | null> = await Promise.all(
+      getMarketInfos(customMarkets).map(async (marketInfo) => {
         try {
           const market = await Market.load(
             connection,
@@ -45,22 +46,28 @@ export function useAllMarkets() {
             {},
             marketInfo.programId,
           );
-          markets.push({ market, marketName: marketInfo.name });
+          return {
+            market,
+            marketName: marketInfo.name,
+            programId: marketInfo.programId,
+          };
         } catch (e) {
           notify({
             message: 'Error loading all market',
             description: e.message,
             type: 'error',
           });
+          return null;
         }
-      }
-      setMarkets(markets);
-    };
-
-    getAllMarkets();
-  }, [connection]);
-
-  return markets;
+      }),
+    );
+    return markets.filter((m) => !!m);
+  };
+  return useAsyncData(
+    getAllMarkets,
+    tuple('getAllMarkets', customMarkets.length, connection),
+    { refreshInterval: _VERY_SLOW_REFRESH_INTERVAL },
+  );
 }
 
 export function useUnmigratedOpenOrdersAccounts() {

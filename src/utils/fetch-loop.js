@@ -203,17 +203,3 @@ function formatCacheKey(cacheKey) {
   }
   return cacheKey;
 }
-
-export async function apiGet(path) {
-  try {
-    let response = await fetch(path);
-    if (!response.ok) {
-      return [];
-    }
-    let json = await response.json();
-    return json;
-  } catch (err) {
-    console.log(err);
-    return [];
-  }
-}

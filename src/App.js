@@ -43,6 +43,7 @@ export default function App() {
 
 function PageContents() {
   const { wallet } = useWallet();
+
   if (!wallet) {
     return <LoginPage />;
   }

@@ -20,8 +20,9 @@ import {
   useMarkPrice,
   useSelectedBaseCurrencyAccount,
   useSelectedQuoteCurrencyAccount,
-  // useOpenOrders,
+  useTokenAccounts,
   useSelectedOpenOrdersAccount,
+  useAllMarkets,
 } from '../utils/markets';
 import { useSendConnection, refreshAccountInfo } from '../utils/connection';
 import {
@@ -31,7 +32,7 @@ import {
 } from '../utils/wallet';
 import WalletSwap from '../utils/walletSwap';
 import LoadingIndicator from './LoadingIndicator';
-import { settleFunds } from '../utils/send';
+import { settleFunds, settleAllFunds } from '../utils/send';
 import { useSnackbar } from 'notistack';
 import { sleep } from '../utils/utils';
 
@@ -108,8 +109,8 @@ const notify = (message) => {
 
 export default function SwapTokensDialog({ open, onClose }) {
   const classes = useStyles();
-  const [fromCoin, setFromCoin] = useState('USDC');
-  const [toCoin, setToCoin] = useState('SOL');
+  const [fromCoin, setFromCoin] = useState('SRM');
+  const [toCoin, setToCoin] = useState('USDT');
   const [pairExists, setPairExists] = useState(true);
   const [size, setSize] = useState(1);
   const [, setSubmitting] = useState(false);
@@ -136,6 +137,10 @@ export default function SwapTokensDialog({ open, onClose }) {
   const markPrice = useMarkPrice();
   const sendConnection = useSendConnection();
   const { wallet } = useWallet();
+
+  const [tokenAccounts] = useTokenAccounts();
+  const { customMarkets } = useMarket();
+  const [marketList] = useAllMarkets(customMarkets);
 
   let priceDecimalCount = market?.tickSize && getDecimalCount(market.tickSize);
 
@@ -182,15 +187,13 @@ export default function SwapTokensDialog({ open, onClose }) {
   async function onSettleFunds() {
     try {
       const walletSwap = new WalletSwap(wallet.publicKey.toBase58());
-      const secretKey = wallet.account.secretKey;
-      await settleFunds({
-        market,
-        openOrders: openOrdersAccount,
+      console.log('WalletSwap', walletSwap.publicKey);
+      const markets = (marketList || []).map((m) => m.market);
+      await settleAllFunds({
         connection: sendConnection,
         wallet: walletSwap,
-        baseCurrencyAccount,
-        quoteCurrencyAccount,
-        secretKey: secretKey,
+        tokenAccounts,
+        markets,
       });
     } catch (e) {
       notify({

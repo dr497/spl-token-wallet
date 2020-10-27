@@ -96,7 +96,7 @@ export default function DepositDialog({
     'swapInfo',
     isProdNetwork,
     balanceInfo.mint?.toBase58(),
-    publicKey.toBase58(),
+    publicKey?.toBase58(),
   ]);
 
   let tabs = null;
@@ -134,7 +134,7 @@ export default function DepositDialog({
       <DialogContent style={{ paddingTop: 16 }}>
         {tab === 0 ? (
           <>
-            {publicKey.equals(owner) ? (
+            {publicKey?.equals(owner) ? (
               <DialogContentText>
                 This address can only be used to receive SOL. Do not send other
                 tokens to this address.
@@ -147,7 +147,7 @@ export default function DepositDialog({
               </DialogContentText>
             )}
             <CopyableDisplay
-              value={publicKey.toBase58()}
+              value={publicKey?.toBase58()}
               label={'Deposit Address'}
               autoFocus
               qrCode
@@ -155,7 +155,7 @@ export default function DepositDialog({
             <DialogContentText variant="body2">
               <Link
                 href={
-                  `https://explorer.solana.com/account/${publicKey.toBase58()}` +
+                  `https://explorer.solana.com/account/${publicKey?.toBase58()}` +
                   urlSuffix
                 }
                 target="_blank"

@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react';
 import * as bip32 from 'bip32';
-import { Account, SystemProgram } from '@solana/web3.js';
+import { Account, SystemProgram, Transaction } from '@solana/web3.js';
 import nacl from 'tweetnacl';
 import {
   setInitialAccountInfo,
@@ -8,6 +8,7 @@ import {
   useConnection,
 } from './connection';
 import {
+  closeTokenAccount,
   createAndInitializeTokenAccount,
   getOwnedTokenAccounts,
   transferTokens,
@@ -68,7 +69,7 @@ export class Wallet {
     );
   };
 
-  transferToken = async (source, destination, amount, memo = null) => {
+  transferToken = async (source, destination, amount, mint, memo = null) => {
     if (source.equals(this.publicKey)) {
       if (memo) {
         throw new Error('Memo not implemented');
@@ -82,18 +83,29 @@ export class Wallet {
       destinationPublicKey: destination,
       amount,
       memo,
+      mint,
     });
   };
 
   transferSol = async (destination, amount) => {
-    return await this.connection.sendTransaction(
+    const tx = new Transaction().add(
       SystemProgram.transfer({
         fromPubkey: this.publicKey,
         toPubkey: destination,
         lamports: amount,
       }),
-      [this.account],
     );
+    return await this.connection.sendTransaction(tx, [this.account], {
+      preflightCommitment: 'single',
+    });
+  };
+
+  closeTokenAccount = async (publicKey) => {
+    return await closeTokenAccount({
+      connection: this.connection,
+      owner: this.account,
+      sourcePublicKey: publicKey,
+    });
   };
 }
 
@@ -139,7 +151,7 @@ export function useWalletPublicKeys() {
     wallet.getTokenAccountInfo,
   );
   const getPublicKeys = () => [
-    wallet.account.publicKey,
+    wallet?.account?.publicKey,
     ...(tokenAccountInfo
       ? tokenAccountInfo.map(({ publicKey }) => publicKey)
       : []),
@@ -160,6 +172,19 @@ export function useWalletTokenAccounts() {
 
 export function refreshWalletPublicKeys(wallet) {
   refreshCache(wallet.getTokenAccountInfo);
+}
+
+export function useWalletAddressForMint(mint) {
+  const [walletAccounts] = useWalletTokenAccounts();
+  return useMemo(
+    () =>
+      mint
+        ? walletAccounts
+            ?.find((account) => account.parsed?.mint?.equals(mint))
+            ?.publicKey.toBase58()
+        : null,
+    [walletAccounts, mint],
+  );
 }
 
 export function useBalanceInfo(publicKey) {

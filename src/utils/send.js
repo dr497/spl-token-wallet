@@ -11,7 +11,9 @@ import {
   Market,
   TOKEN_MINTS,
   TokenInstructions,
+  OpenOrders,
 } from '@project-serum/serum';
+import { getSelectedTokenAccountForMint } from './markets';
 
 export const notify = (message) => {
   console.log('notify', message);
@@ -253,6 +255,7 @@ export async function placeOrder({
     10_000,
     10_000,
   );
+
   transaction.add(placeOrderTx);
   transaction.add(market.makeMatchOrdersTransaction(5));
 
@@ -435,6 +438,7 @@ async function sendTransaction({
     connection,
     secretKey,
   });
+
   return await sendSignedTransaction({
     signedTransaction,
     connection,
@@ -582,4 +586,116 @@ function mergeTransactions(transactions) {
       transaction.add(t);
     });
   return transaction;
+}
+
+export async function settleAllFunds({
+  connection,
+  wallet,
+  tokenAccounts,
+  markets,
+  selectedTokenAccounts,
+}: {
+  connection: Connection,
+  wallet: Wallet,
+  tokenAccounts: TokenAccount[],
+  markets: Market[],
+  selectedTokenAccounts?: SelectedTokenAccounts,
+}) {
+  if (!markets || !wallet || !connection || !tokenAccounts) {
+    return;
+  }
+
+  const programIds: PublicKey[] = [];
+  markets
+    .reduce((cumulative, m) => {
+      // @ts-ignore
+      cumulative.push(m._programId);
+      return cumulative;
+    }, [])
+    .forEach((programId) => {
+      if (!programIds.find((p) => p.equals(programId))) {
+        programIds.push(programId);
+      }
+    });
+
+  const getOpenOrdersAccountsForProgramId = async (programId) => {
+    const openOrdersAccounts = await OpenOrders.findForOwner(
+      connection,
+      new PublicKey(wallet.publicKey),
+      programId,
+    );
+    return openOrdersAccounts.filter(
+      (openOrders) =>
+        openOrders.baseTokenFree.toNumber() ||
+        openOrders.quoteTokenFree.toNumber(),
+    );
+  };
+
+  const openOrdersAccountsForProgramIds = await Promise.all(
+    programIds.map((programId) => getOpenOrdersAccountsForProgramId(programId)),
+  );
+  const openOrdersAccounts = openOrdersAccountsForProgramIds.reduce(
+    (accounts, current) => accounts.concat(current),
+    [],
+  );
+
+  const settleTransactions = (
+    await Promise.all(
+      openOrdersAccounts.map((openOrdersAccount) => {
+        const market = markets.find((m) =>
+          // @ts-ignore
+          m._decoded?.ownAddress?.equals(openOrdersAccount.market),
+        );
+        const baseMint = market?.baseMintAddress;
+        const quoteMint = market?.quoteMintAddress;
+
+        const selectedBaseTokenAccount = getSelectedTokenAccountForMint(
+          tokenAccounts,
+          baseMint,
+          baseMint &&
+            selectedTokenAccounts &&
+            selectedTokenAccounts[baseMint.toBase58()],
+        )?.pubkey;
+        const selectedQuoteTokenAccount = getSelectedTokenAccountForMint(
+          tokenAccounts,
+          quoteMint,
+          quoteMint &&
+            selectedTokenAccounts &&
+            selectedTokenAccounts[quoteMint.toBase58()],
+        )?.pubkey;
+        if (!selectedBaseTokenAccount || !selectedQuoteTokenAccount) {
+          return null;
+        }
+        return (
+          market &&
+          market.makeSettleFundsTransaction(
+            connection,
+            openOrdersAccount,
+            selectedBaseTokenAccount,
+            selectedQuoteTokenAccount,
+          )
+        );
+      }),
+    )
+  ).filter((x) => !!x);
+  if (!settleTransactions || settleTransactions.length === 0) return;
+
+  const transactions = settleTransactions.slice(0, 4).map((t) => t.transaction);
+  const signers: Array<Account> = [];
+  settleTransactions
+    .reduce((cumulative: Array<Account>, t) => cumulative.concat(t.signers), [])
+    .forEach((signer) => {
+      if (!signers.find((s) => s.publicKey.equals(signer.publicKey))) {
+        signers.push(signer);
+      }
+    });
+
+  const transaction = mergeTransactions(transactions);
+
+  return await sendTransaction({
+    transaction,
+    signers,
+    wallet,
+    connection,
+  });
 }

@@ -241,7 +241,7 @@ const BalanceCardAddToken = () => {
                 Add Token
               </Typography>
             </Grid>
-            <Grid item>
+            {/*            <Grid item>
               <IconButton onClick={() => setShowSwapTokenDialog(true)}>
                 <img src={swap} alt="" style={{ paddingTop: 40 }} />
               </IconButton>
@@ -249,6 +249,7 @@ const BalanceCardAddToken = () => {
                 Swap Token
               </Typography>
             </Grid>
+          */}
           </Grid>
         </CardContent>
       </Card>
@@ -256,10 +257,10 @@ const BalanceCardAddToken = () => {
         open={showAddTokenDialog}
         onClose={() => setShowAddTokenDialog(false)}
       />
-      <SwapTokensDialog
+      {/*      <SwapTokensDialog
         open={showSwapTokenDialog}
         onClose={() => setShowSwapTokenDialog(false)}
-      />
+      />*/}
     </>
   );
 };

@@ -4,6 +4,7 @@ import {
   SYSVAR_RENT_PUBKEY,
   TransactionInstruction,
 } from '@solana/web3.js';
+import { publicKeyLayout } from '@project-serum/serum/lib/layout';
 
 export const TOKEN_PROGRAM_ID = new PublicKey(
   'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
@@ -44,6 +45,7 @@ LAYOUT.addVariant(
   BufferLayout.struct([BufferLayout.nu64('amount')]),
   'burn',
 );
+LAYOUT.addVariant(9, BufferLayout.struct([]), 'closeAccount');
 
 const instructionMaxSpan = Math.max(
   ...Object.values(LAYOUT.registry).map((r) => r.span),
@@ -127,10 +129,48 @@ export function mintTo({ mint, destination, amount, mintAuthority }) {
   });
 }
 
+export function closeAccount({ source, destination, owner }) {
+  const keys = [
+    { pubkey: source, isSigner: false, isWritable: true },
+    { pubkey: destination, isSigner: false, isWritable: true },
+    { pubkey: owner, isSigner: true, isWritable: false },
+  ];
+  return new TransactionInstruction({
+    keys,
+    data: encodeTokenInstructionData({
+      closeAccount: {},
+    }),
+    programId: TOKEN_PROGRAM_ID,
+  });
+}
+
 export function memoInstruction(memo) {
   return new TransactionInstruction({
     keys: [],
     data: Buffer.from(memo, 'utf-8'),
     programId: MEMO_PROGRAM_ID,
+  });
+}
+
+export const OWNER_VALIDATION_PROGRAM_ID = new PublicKey(
+  '4MNPdKu9wFMvEeZBMt3Eipfs5ovVWTJb31pEXDJAAxX5',
+);
+
+export const OWNER_VALIDATION_LAYOUT = BufferLayout.struct([
+  publicKeyLayout('account'),
+]);
+
+export function encodeOwnerValidationInstruction(instruction) {
+  const b = Buffer.alloc(OWNER_VALIDATION_LAYOUT.span);
+  const span = OWNER_VALIDATION_LAYOUT.encode(instruction, b);
+  return b.slice(0, span);
+}
+
+export function assertOwner({ account, owner }) {
+  const keys = [{ pubkey: account, isSigner: false, isWritable: false }];
+  return new TransactionInstruction({
+    keys,
+    data: encodeOwnerValidationInstruction({ account: owner }),
+    programId: OWNER_VALIDATION_PROGRAM_ID,
   });
 }

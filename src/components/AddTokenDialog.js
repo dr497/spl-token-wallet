@@ -32,6 +32,8 @@ import CopyableDisplay from './CopyableDisplay';
 import DialogForm from './DialogForm';
 import { showSwapAddress } from '../utils/config';
 import { swapApiRequest } from '../utils/swap/api';
+import TokenIcon from './TokenIcon';
+import { ListItemIcon } from '@material-ui/core';
 
 const feeFormat = new Intl.NumberFormat(undefined, {
   minimumFractionDigits: 6,
@@ -46,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AddTokenDialog({ open, onClose }) {
-  let { wallet } = useWallet();
+  let wallet = useWallet();
   let [tokenAccountCost] = useAsyncData(
     wallet.tokenAccountCost,
     wallet.tokenAccountCost,
@@ -168,18 +170,20 @@ export default function AddTokenDialog({ open, onClose }) {
           </React.Fragment>
         ) : tab === 'popular' ? (
           <List disablePadding>
-            {popularTokens.map((token) => (
-              <TokenListItem
-                key={token.mintAddress}
-                {...token}
-                existingAccount={(walletAccounts || []).find(
-                  (account) =>
-                    account.parsed.mint.toBase58() === token.mintAddress,
-                )}
-                onSubmit={onSubmit}
-                disalbed={sending}
-              />
-            ))}
+            {popularTokens
+              .filter((token) => !token.deprecated)
+              .map((token) => (
+                <TokenListItem
+                  key={token.mintAddress}
+                  {...token}
+                  existingAccount={(walletAccounts || []).find(
+                    (account) =>
+                      account.parsed.mint.toBase58() === token.mintAddress,
+                  )}
+                  onSubmit={onSubmit}
+                  disalbed={sending}
+                />
+              ))}
           </List>
         ) : tab === 'erc20' ? (
           <>
@@ -224,6 +228,7 @@ export default function AddTokenDialog({ open, onClose }) {
 
 function TokenListItem({
   tokenName,
+  icon,
   tokenSymbol,
   mintAddress,
   onSubmit,
@@ -237,6 +242,9 @@ function TokenListItem({
     <React.Fragment>
       <div style={{ display: 'flex' }} key={tokenName}>
         <ListItem button onClick={() => setOpen((open) => !open)}>
+          <ListItemIcon>
+            <TokenIcon url={icon} tokenName={tokenName} size={20} />
+          </ListItemIcon>
           <ListItemText
             primary={
               <Link

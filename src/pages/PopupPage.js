@@ -148,9 +148,7 @@ export default function PopupPage({ opener }) {
   }
 
   return (
-    <Typography style={{ color: 'white' }}>
-      Please keep this window open in the background.
-    </Typography>
+    <Typography>Please keep this window open in the background.</Typography>
   );
 }
 
