@@ -20,6 +20,7 @@ import SolanaIcon from './SolanaIcon';
 import CodeIcon from '@material-ui/icons/Code';
 import Tooltip from '@material-ui/core/Tooltip';
 import LogOffButton from './LogOff';
+import ShowSeedButton from './SeedPhrase';
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -49,9 +50,9 @@ export default function NavigationFrame({ children }) {
           <Typography variant="h6" className={classes.title} component="h1">
             Solana SPL Token Wallet
           </Typography>
-          <LogOffButton />
+          <ShowSeedButton />
           <WalletSelector />
-          <NetworkSelector />
+          <LogOffButton />
         </Toolbar>
       </AppBar>
       <main className={classes.content}>{children}</main>
