@@ -139,11 +139,11 @@ export function useWallet() {
 export function useWalletPublicKeys() {
   let wallet = useWallet();
   let [tokenAccountInfo, loaded] = useAsyncData(
-    wallet.getTokenAccountInfo,
-    wallet.getTokenAccountInfo,
+    wallet?.getTokenAccountInfo,
+    wallet?.getTokenAccountInfo,
   );
   const getPublicKeys = () => [
-    wallet.account.publicKey,
+    wallet?.account?.publicKey,
     ...(tokenAccountInfo
       ? tokenAccountInfo.map(({ publicKey }) => publicKey)
       : []),
