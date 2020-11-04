@@ -53,8 +53,8 @@ export default function BalancesList() {
   const [showAddTokenDialog, setShowAddTokenDialog] = useState(false);
 
   return (
-    <Paper>
-      <AppBar position="static" color="default" elevation={1}>
+    <Paper elevation={0}>
+      <AppBar position="static" color="default" elevation={0}>
         <Toolbar>
           <Typography variant="h6" style={{ flexGrow: 1 }} component="h2">
             Balances
