@@ -124,7 +124,11 @@ function BalanceListItem({ publicKey }) {
 
   return (
     <>
-      <ListItem button onClick={() => setOpen((open) => !open)}>
+      <ListItem
+        button
+        onClick={() => setOpen((open) => !open)}
+        style={{ border: '1px solid grey' }}
+      >
         <ListItemIcon>
           <TokenIcon mint={mint} tokenName={tokenName} size={28} />
         </ListItemIcon>
