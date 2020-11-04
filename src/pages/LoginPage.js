@@ -18,6 +18,56 @@ import CardActions from '@material-ui/core/CardActions';
 import Button from '@material-ui/core/Button';
 import { useCallAsync } from '../utils/notifications';
 import Link from '@material-ui/core/Link';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+  buttonContainer: {
+    color: 'rgb(127, 131, 247)',
+    display: 'flex',
+    justifyContent: 'space-evenly',
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+  },
+  card: {
+    color: 'white',
+    backgroundColor: 'rgb(25,34,70)',
+    border: '5px solid',
+    borderImage: 'linear-gradient(to right, #3333ff, #8080ff) 1 stretch',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  input: {
+    color: 'white',
+    borderColor: 'white',
+  },
+  container: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+    width: 200,
+  },
+
+  cssLabel: {
+    color: 'white',
+  },
+
+  cssOutlinedInput: {
+    color: 'white',
+    '&$cssFocused $notchedOutline': {
+      borderColor: `linear-gradient(to right, #3333ff, #8080ff) 1 stretch`,
+    },
+  },
+
+  cssFocused: {},
+
+  notchedOutline: {
+    border: '1px solid',
+    borderImage: 'linear-gradient(to right, #3333ff, #8080ff) 1 stretch',
+  },
+}));
 
 export default function LoginPage() {
   const [restore, setRestore] = useState(false);
@@ -74,10 +124,10 @@ function CreateWalletForm() {
 
 function SeedWordsForm({ mnemonicAndSeed, goForward }) {
   const [confirmed, setConfirmed] = useState(false);
-
+  const classes = useStyles();
   return (
-    <Card>
-      <CardContent>
+    <Card className={classes.card} variant="outlined">
+      <CardContent style={{ color: 'white' }}>
         <Typography variant="h5" gutterBottom>
           Create New Wallet
         </Typography>
@@ -97,6 +147,19 @@ function SeedWordsForm({ mnemonicAndSeed, goForward }) {
             value={mnemonicAndSeed.mnemonic}
             label="Seed Words"
             onFocus={(e) => e.currentTarget.select()}
+            InputLabelProps={{
+              classes: {
+                root: classes.cssLabel,
+                focused: classes.cssFocused,
+              },
+            }}
+            InputProps={{
+              classes: {
+                root: classes.cssOutlinedInput,
+                focused: classes.cssFocused,
+                notchedOutline: classes.notchedOutline,
+              },
+            }}
           />
         ) : (
           <LoadingIndicator />
@@ -118,7 +181,13 @@ function SeedWordsForm({ mnemonicAndSeed, goForward }) {
         />
       </CardContent>
       <CardActions style={{ justifyContent: 'flex-end' }}>
-        <Button color="primary" disabled={!confirmed} onClick={goForward}>
+        <Button
+          color="primary"
+          disabled={!confirmed}
+          onClick={goForward}
+          className={classes.buttonContainer}
+          variant="outlined"
+        >
           Continue
         </Button>
       </CardActions>
@@ -129,9 +198,10 @@ function SeedWordsForm({ mnemonicAndSeed, goForward }) {
 function ChoosePasswordForm({ goBack, onSubmit }) {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
+  const classes = useStyles();
 
   return (
-    <Card>
+    <Card className={classes.card}>
       <CardContent>
         <Typography variant="h5" gutterBottom>
           Choose a Password (Optional)
@@ -148,6 +218,19 @@ function ChoosePasswordForm({ goBack, onSubmit }) {
           autoComplete="new-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          InputLabelProps={{
+            classes: {
+              root: classes.cssLabel,
+              focused: classes.cssFocused,
+            },
+          }}
+          InputProps={{
+            classes: {
+              root: classes.cssOutlinedInput,
+              focused: classes.cssFocused,
+              notchedOutline: classes.notchedOutline,
+            },
+          }}
         />
         <TextField
           variant="outlined"
@@ -158,6 +241,19 @@ function ChoosePasswordForm({ goBack, onSubmit }) {
           autoComplete="new-password"
           value={passwordConfirm}
           onChange={(e) => setPasswordConfirm(e.target.value)}
+          InputLabelProps={{
+            classes: {
+              root: classes.cssLabel,
+              focused: classes.cssFocused,
+            },
+          }}
+          InputProps={{
+            classes: {
+              root: classes.cssOutlinedInput,
+              focused: classes.cssFocused,
+              notchedOutline: classes.notchedOutline,
+            },
+          }}
         />
         <Typography>
           If you forget your password you will need to restore your wallet using
@@ -165,8 +261,16 @@ function ChoosePasswordForm({ goBack, onSubmit }) {
         </Typography>
       </CardContent>
       <CardActions style={{ justifyContent: 'space-between' }}>
-        <Button onClick={goBack}>Back</Button>
         <Button
+          variant="outlined"
+          className={classes.buttonContainer}
+          onClick={goBack}
+        >
+          Back
+        </Button>
+        <Button
+          variant="outlined"
+          className={classes.buttonContainer}
           color="primary"
           disabled={password !== passwordConfirm}
           onClick={() => onSubmit(password)}
@@ -179,6 +283,7 @@ function ChoosePasswordForm({ goBack, onSubmit }) {
 }
 
 function LoginForm() {
+  const classes = useStyles();
   const [password, setPassword] = useState('');
   const [stayLoggedIn, setStayLoggedIn] = useState(false);
   const callAsync = useCallAsync();
@@ -191,7 +296,7 @@ function LoginForm() {
   }
 
   return (
-    <Card>
+    <Card className={classes.card}>
       <CardContent>
         <Typography variant="h5" gutterBottom>
           Unlock Wallet
@@ -205,6 +310,19 @@ function LoginForm() {
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          InputLabelProps={{
+            classes: {
+              root: classes.cssLabel,
+              focused: classes.cssFocused,
+            },
+          }}
+          InputProps={{
+            classes: {
+              root: classes.cssOutlinedInput,
+              focused: classes.cssFocused,
+              notchedOutline: classes.notchedOutline,
+            },
+          }}
         />
         <FormControlLabel
           control={
@@ -226,6 +344,7 @@ function LoginForm() {
 }
 
 function RestoreWalletForm({ goBack }) {
+  const classes = useStyles();
   const [mnemonic, setMnemonic] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
@@ -240,7 +359,7 @@ function RestoreWalletForm({ goBack }) {
   }
 
   return (
-    <Card>
+    <Card className={classes.card}>
       <CardContent>
         <Typography variant="h5" gutterBottom>
           Restore Existing Wallet
@@ -258,6 +377,19 @@ function RestoreWalletForm({ goBack }) {
           label="Seed Words"
           value={mnemonic}
           onChange={(e) => setMnemonic(e.target.value)}
+          InputLabelProps={{
+            classes: {
+              root: classes.cssLabel,
+              focused: classes.cssFocused,
+            },
+          }}
+          InputProps={{
+            classes: {
+              root: classes.cssOutlinedInput,
+              focused: classes.cssFocused,
+              notchedOutline: classes.notchedOutline,
+            },
+          }}
         />
         <TextField
           variant="outlined"
@@ -268,6 +400,19 @@ function RestoreWalletForm({ goBack }) {
           autoComplete="new-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          InputLabelProps={{
+            classes: {
+              root: classes.cssLabel,
+              focused: classes.cssFocused,
+            },
+          }}
+          InputProps={{
+            classes: {
+              root: classes.cssOutlinedInput,
+              focused: classes.cssFocused,
+              notchedOutline: classes.notchedOutline,
+            },
+          }}
         />
         <TextField
           variant="outlined"
@@ -278,11 +423,32 @@ function RestoreWalletForm({ goBack }) {
           autoComplete="new-password"
           value={passwordConfirm}
           onChange={(e) => setPasswordConfirm(e.target.value)}
+          InputLabelProps={{
+            classes: {
+              root: classes.cssLabel,
+              focused: classes.cssFocused,
+            },
+          }}
+          InputProps={{
+            classes: {
+              root: classes.cssOutlinedInput,
+              focused: classes.cssFocused,
+              notchedOutline: classes.notchedOutline,
+            },
+          }}
         />
       </CardContent>
       <CardActions style={{ justifyContent: 'space-between' }}>
-        <Button onClick={goBack}>Cancel</Button>
         <Button
+          className={classes.buttonContainer}
+          variant="outlined"
+          onClick={goBack}
+        >
+          Cancel
+        </Button>
+        <Button
+          className={classes.buttonContainer}
+          variant="outlined"
           color="primary"
           disabled={password !== passwordConfirm}
           onClick={submit}

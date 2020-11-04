@@ -1,6 +1,6 @@
 import React from 'react';
 import Container from '@material-ui/core/Container';
-import BalancesList from '../components/BalancesList';
+import BalancesList from '../components/BalanceCard';
 import Grid from '@material-ui/core/Grid';
 import { useIsProdNetwork } from '../utils/connection';
 import DebugButtons from '../components/DebugButtons';

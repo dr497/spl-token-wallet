@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 import LoadingIndicator from './LoadingIndicator';
-import { useSolanaExplorerUrlSuffix } from '../utils/connection';
-import { useBalanceInfo } from '../utils/wallet';
+import {
+  useSolanaExplorerUrlSuffix,
+  refreshAccountInfo,
+} from '../utils/connection';
+import {
+  useBalanceInfo,
+  useWallet,
+  useWalletPublicKeys,
+  refreshWalletPublicKeys,
+} from '../utils/wallet';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -20,6 +28,12 @@ import AddTokenDialog from './AddTokenDialog';
 import TokenInfoDialog from './TokenInfoDialog';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CloseTokenAccountDialog from './CloseTokenAccountButton';
+import Paper from '@material-ui/core/Paper';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import AddIcon from '@material-ui/icons/Add';
+import Tooltip from '@material-ui/core/Tooltip';
+import RefreshIcon from '@material-ui/icons/Refresh';
 import addToken from '../assets/add_token.svg';
 
 const balanceFormat = new Intl.NumberFormat(undefined, {
@@ -55,7 +69,72 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  paper: {
+    background: 'transparent',
+  },
 }));
+
+export default function BalancesList() {
+  const wallet = useWallet();
+  const [publicKeys, loaded] = useWalletPublicKeys();
+  const [showAddTokenDialog, setShowAddTokenDialog] = useState(false);
+  const classes = useStyles();
+  return (
+    <Paper elevation={0} className={classes.paper}>
+      <AppBar position="static" color="transparent" elevation={0}>
+        <Toolbar>
+          <Typography
+            variant="h6"
+            style={{ flexGrow: 1, color: 'white' }}
+            component="h2"
+          >
+            Balances
+          </Typography>
+          <Tooltip title="Add Token" arrow>
+            <IconButton onClick={() => setShowAddTokenDialog(true)}>
+              <AddIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Refresh" arrow>
+            <IconButton
+              onClick={() => {
+                refreshWalletPublicKeys(wallet);
+                publicKeys.map((publicKey) =>
+                  refreshAccountInfo(wallet.connection, publicKey, true),
+                );
+              }}
+              style={{ marginRight: -12 }}
+            >
+              <RefreshIcon />
+            </IconButton>
+          </Tooltip>
+        </Toolbar>
+      </AppBar>
+      <Grid
+        container
+        direction="row"
+        justify="space-around"
+        alignItems="center"
+        spacing={5}
+      >
+        <Grid item>
+          <BalanceCardAddToken />
+        </Grid>
+        {publicKeys.map((_, index) => (
+          <Grid item>
+            <BalanceCardItem publicKey={publicKeys[index]} />
+          </Grid>
+        ))}
+
+        {loaded ? null : <LoadingIndicator />}
+      </Grid>
+      <AddTokenDialog
+        open={showAddTokenDialog}
+        onClose={() => setShowAddTokenDialog(false)}
+      />
+    </Paper>
+  );
+}
 
 export const BalanceCardItem = ({ publicKey }) => {
   const classes = useStyles();
@@ -130,16 +209,15 @@ export const BalanceCardItem = ({ publicKey }) => {
           >
             Explore
           </Button>
+        </CardActions>
+        <CardActions style={{ justifyContent: 'center' }}>
           {mint && amount === 0 ? (
             <Button
-              variant="outlined"
               color="secondary"
               size="small"
               startIcon={<DeleteIcon />}
               onClick={() => setCloseTokenAccountDialogOpen(true)}
-            >
-              Delete
-            </Button>
+            />
           ) : null}
         </CardActions>
       </Card>
