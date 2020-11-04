@@ -10,9 +10,8 @@ import { SnackbarProvider } from 'notistack';
 import PopupPage from './pages/PopupPage';
 import LoginPage from './pages/LoginPage';
 import theme from './theme';
-export default function App() {
-  // TODO: add toggle for dark mode
 
+export default function App() {
   // Disallow rendering inside an iframe to prevent clickjacking.
   if (window.self !== window.top) {
     return null;
