@@ -45,7 +45,7 @@ export default function NavigationFrame({ children }) {
   const classes = useStyles();
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="static" color="transparent">
         <Toolbar>
           <Typography variant="h6" className={classes.title} component="h1">
             {/*Solana SPL Token Wallet*/}
