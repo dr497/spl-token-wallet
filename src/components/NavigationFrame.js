@@ -23,6 +23,7 @@ import LogOffButton from './LogOff';
 import ShowSeedButton from './SeedPhrase';
 import logo from '../assets/logo-big.svg';
 import Trading from './Trading';
+import AirdropButton from './Airdrop';
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -59,6 +60,7 @@ export default function NavigationFrame({ children }) {
             Bonfida Wallet
           </Typography>
           <Trading />
+          <AirdropButton />
           <ShowSeedButton />
           <WalletSelector />
           <LogOffButton />
