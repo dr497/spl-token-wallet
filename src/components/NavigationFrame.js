@@ -56,7 +56,6 @@ export default function NavigationFrame({ children }) {
         </Toolbar>
       </AppBar>
       <main className={classes.content}>{children}</main>
-      <Footer />
     </>
   );
 }
