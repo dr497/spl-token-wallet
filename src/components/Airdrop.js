@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import fetch from 'node-fetch';
 import { useSnackbar } from 'notistack';
 import { useWalletPublicKeys } from '../utils/wallet';
+
 const useStyles = makeStyles((theme) => ({
   button: {
     marginRight: theme.spacing(1),
