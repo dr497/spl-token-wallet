@@ -197,6 +197,21 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
   },
+  card: {
+    height: 'auto',
+    width: 'auto',
+    color: 'white',
+    backgroundColor: 'rgb(25,34,70)',
+    border: '5px solid',
+    borderImage: 'linear-gradient(to right, #3333ff, #8080ff) 1 stretch',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonContainer: {
+    color: 'rgb(127, 131, 247)',
+    display: 'flex',
+    justifyContent: 'space-evenly',
+  },
 }));
 
 function ApproveConnectionForm({ origin, onApprove }) {
@@ -208,7 +223,7 @@ function ApproveConnectionForm({ origin, onApprove }) {
     false,
   );
   return (
-    <Card>
+    <Card className={classes.card}>
       <CardContent>
         <Typography variant="h6" component="h1" gutterBottom>
           Allow this site to access your Solana account?
@@ -254,9 +269,18 @@ function ApproveConnectionForm({ origin, onApprove }) {
         )}
       </CardContent>
       <CardActions className={classes.actions}>
-        <Button onClick={window.close}>Cancel</Button>
         <Button
+          className={classes.buttonContainer}
           color="primary"
+          variant="outlined"
+          onClick={window.close}
+        >
+          Cancel
+        </Button>
+        <Button
+          className={classes.buttonContainer}
+          color="primary"
+          variant="outlined"
           onClick={() => onApprove(autoApprove)}
           disabled={!dismissed && autoApprove}
         >
@@ -446,7 +470,7 @@ function ApproveSignatureForm({
   };
 
   return (
-    <Card>
+    <Card className={classes.card}>
       <CardContent>
         {parsing ? (
           <>

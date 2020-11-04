@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 const useStyles = makeStyles((theme) => ({
   button: {
     marginLeft: theme.spacing(1),
+    borderRadius: 0,
   },
 }));
 
@@ -24,7 +25,12 @@ const LogOffButton = () => {
   if (walletLocked || walletUnlocked) {
     return (
       <>
-        <Button color="inherit" onClick={onClick} className={classes.button}>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={onClick}
+          className={classes.button}
+        >
           Log out
         </Button>
       </>

@@ -23,7 +23,13 @@ const ShowSeedButton = () => {
   }
   return (
     <>
-      <Button onClick={() => setOpen(true)} type="submit" color="inherit">
+      <Button
+        variant="outlined"
+        onClick={() => setOpen(true)}
+        type="submit"
+        color="primary"
+        style={{ borderRadius: 0 }}
+      >
         Show Seed
       </Button>
       <Dialog open={open}>

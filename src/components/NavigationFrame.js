@@ -21,6 +21,8 @@ import CodeIcon from '@material-ui/icons/Code';
 import Tooltip from '@material-ui/core/Tooltip';
 import LogOffButton from './LogOff';
 import ShowSeedButton from './SeedPhrase';
+import logo from '../assets/logo-big.svg';
+import Trading from './Trading';
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -32,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+    color: 'white',
   },
   button: {
     marginLeft: theme.spacing(1),
@@ -47,9 +50,15 @@ export default function NavigationFrame({ children }) {
     <>
       <AppBar position="static" color="transparent">
         <Toolbar>
+          <img
+            src={logo}
+            alt="logo"
+            style={{ width: '40px', paddingRight: 10 }}
+          />
           <Typography variant="h6" className={classes.title} component="h1">
-            {/*Solana SPL Token Wallet*/}
+            Bonfida Wallet
           </Typography>
+          <Trading />
           <ShowSeedButton />
           <WalletSelector />
           <LogOffButton />
@@ -139,7 +148,9 @@ function WalletSelector() {
     <>
       <Hidden xsDown>
         <Button
-          color="inherit"
+          variant="outlined"
+          color="primary"
+          style={{ borderRadius: 0 }}
           onClick={(e) => setAnchorEl(e.target)}
           className={classes.button}
         >
