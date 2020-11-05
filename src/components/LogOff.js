@@ -35,7 +35,7 @@ const LogOffButton = () => {
           >
             Log out
           </Button>
-        </Hiden>
+        </Hidden>
       </>
     );
   }
