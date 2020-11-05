@@ -2,6 +2,7 @@ import React from 'react';
 import { useLocalStorageState } from '../utils/utils';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Hidden from '@material-ui/core/Hidden';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -25,14 +26,16 @@ const LogOffButton = () => {
   if (walletLocked || walletUnlocked) {
     return (
       <>
-        <Button
-          variant="outlined"
-          color="primary"
-          onClick={onClick}
-          className={classes.button}
-        >
-          Log out
-        </Button>
+        <Hidden xsDown>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={onClick}
+            className={classes.button}
+          >
+            Log out
+          </Button>
+        </Hiden>
       </>
     );
   }

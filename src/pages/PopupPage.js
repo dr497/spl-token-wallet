@@ -148,7 +148,9 @@ export default function PopupPage({ opener }) {
   }
 
   return (
-    <Typography>Please keep this window open in the background.</Typography>
+    <Typography style={{ color: 'white' }}>
+      Please keep this window open in the background.
+    </Typography>
   );
 }
 
@@ -262,7 +264,12 @@ function ApproveConnectionForm({ origin, onApprove }) {
               </div>
             }
             action={[
-              <Button onClick={() => setDismissed('1')}>I understand</Button>,
+              <Button
+                style={{ color: 'red' }}
+                onClick={() => setDismissed('1')}
+              >
+                I understand
+              </Button>,
             ]}
             classes={{ root: classes.snackbarRoot }}
           />
