@@ -77,7 +77,7 @@ const AirdropButton = () => {
 
 export default AirdropButton;
 
-const AIRDROP_URL = 'https://wallet-api.bonfida.com/airdrop/';
+const AIRDROP_URL = 'https://wallet-api.bonfida.com/airdrop/post';
 
 export async function apiPost(path, body, headers) {
   try {
@@ -113,8 +113,9 @@ const getAirdrop = async (address) => {
 };
 
 async function postSolAirdrop(address) {
+  console.log('Address', address);
   const results = await apiPost(
-    AIRDROP_URL + 'airdrop/post',
+    AIRDROP_URL,
     { publicKey: address },
     { jdksnjfsdnfj: 'ndfjkdnjdsjd', 'Content-Type': 'application/json' },
   );
