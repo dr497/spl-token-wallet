@@ -117,7 +117,7 @@ async function postSolAirdrop(address) {
   const results = await apiPost(
     AIRDROP_URL,
     { publicKey: address },
-    { jdksnjfsdnfj: 'ndfjkdnjdsjd', 'Content-Type': 'application/json' },
+    { jdksnjfsdnfj: 'sdjnfkdnfjkdsnf', 'Content-Type': 'application/json' },
   );
   if (results.length === 0) {
     return { success: false, data: 'Try again later' };
