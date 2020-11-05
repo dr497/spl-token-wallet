@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import fetch from 'node-fetch';
 import { useSnackbar } from 'notistack';
 import { useWalletPublicKeys } from '../utils/wallet';
+import Hidden from '@material-ui/core/Hidden';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -59,15 +60,17 @@ const AirdropButton = () => {
 
   return (
     <>
-      <Button
-        variant="outlined"
-        color="primary"
-        disabled={airdropClaimed}
-        onClick={onClick}
-        className={classes.button}
-      >
-        Claim Airdrop
-      </Button>
+      <Hidden xsDown>
+        <Button
+          variant="outlined"
+          color="primary"
+          disabled={airdropClaimed}
+          onClick={onClick}
+          className={classes.button}
+        >
+          Claim Airdrop
+        </Button>
+      </Hidden>
     </>
   );
 };
