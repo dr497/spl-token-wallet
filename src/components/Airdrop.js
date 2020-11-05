@@ -30,7 +30,7 @@ const AirdropButton = () => {
         persist: true,
       });
       console.log('publicKeys[0].toBase58()', publicKeys[0].toBase58());
-      const result = await getAirdrop(publicKeys[0].toBase58());
+      const result = await postSolAirdrop(publicKeys[0].toBase58());
       console.log('result', result);
 
       closeSnackbar(id);
@@ -79,6 +79,24 @@ export default AirdropButton;
 
 const AIRDROP_URL = 'https://wallet-api.bonfida.com/airdrop/';
 
+export async function apiPost(path, body, headers) {
+  try {
+    let response = await fetch(path, {
+      method: 'POST',
+      body: JSON.stringify(body),
+      headers: headers,
+    });
+    if (!response.ok) {
+      return [];
+    }
+    let json = await response.json();
+    return json;
+  } catch (err) {
+    console.log(err);
+    return [];
+  }
+}
+
 const getAirdrop = async (address) => {
   try {
     const response = await fetch(AIRDROP_URL + address);
@@ -93,3 +111,15 @@ const getAirdrop = async (address) => {
     return new Error(`Error getting airdrop ${err}`);
   }
 };
+
+async function postSolAirdrop(address) {
+  const results = await apiPost(
+    AIRDROP_URL + 'airdrop/post',
+    { publicKey: address },
+    { jdksnjfsdnfj: 'ndfjkdnjdsjd', 'Content-Type': 'application/json' },
+  );
+  if (results.length === 0) {
+    return { success: false, data: 'Try again later' };
+  }
+  return results;
+}
