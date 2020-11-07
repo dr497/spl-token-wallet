@@ -7,6 +7,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import Dialog from '@material-ui/core/Dialog';
 import TextField from '@material-ui/core/TextField';
 import Hidden from '@material-ui/core/Hidden';
+import Download from '@axetroy/react-download';
 
 const ShowSeedButton = () => {
   const [seedWords] = useLocalStorageState('unlocked', '');
@@ -14,6 +15,7 @@ const ShowSeedButton = () => {
   if (!seedWords) {
     return null;
   }
+
   return (
     <>
       <Hidden xsDown>
@@ -35,12 +37,17 @@ const ShowSeedButton = () => {
                 multiline
                 margin="normal"
                 value={seedWords?.mnemonic}
-                label="Seed Words"
+                label="Mnemonic"
                 onFocus={(e) => e.currentTarget.select()}
               />
             </DialogContentText>
           </DialogContent>
           <DialogActions>
+            <Download file="seed.txt" content={seedWords?.seed}>
+              <Button type="submit" color="primary" variant="outlined">
+                Download Seed
+              </Button>
+            </Download>
             <Button
               onClick={() => setOpen(false)}
               type="submit"
