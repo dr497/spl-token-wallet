@@ -29,10 +29,7 @@ const AirdropButton = () => {
         variant: 'info',
         persist: true,
       });
-      console.log('publicKeys[0].toBase58()', publicKeys[0].toBase58());
       const result = await postSolAirdrop(publicKeys[0].toBase58());
-      console.log('result', result);
-
       closeSnackbar(id);
       if (result.success) {
         enqueueSnackbar('Airdrop confirmed', {
@@ -97,23 +94,7 @@ export async function apiPost(path, body, headers) {
   }
 }
 
-const getAirdrop = async (address) => {
-  try {
-    const response = await fetch(AIRDROP_URL + address);
-    if (!response.ok) {
-      return new Error(
-        `Error getting airdrop - Response status ${response.status}`,
-      );
-    }
-    const json = await response.json();
-    return json;
-  } catch (err) {
-    return new Error(`Error getting airdrop ${err}`);
-  }
-};
-
 async function postSolAirdrop(address) {
-  console.log('Address', address);
   const results = await apiPost(
     AIRDROP_URL,
     { publicKey: address },
