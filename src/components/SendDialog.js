@@ -28,7 +28,10 @@ import Link from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import { useAsyncData } from '../utils/fetch-loop';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import {TOKEN_PROGRAM_ID, WRAPPED_SOL_MINT} from '../utils/tokens/instructions';
+import {
+  TOKEN_PROGRAM_ID,
+  WRAPPED_SOL_MINT,
+} from '../utils/tokens/instructions';
 import { parseTokenAccountData } from '../utils/tokens/data';
 
 const WUSDC_MINT = new PublicKey(
@@ -134,9 +137,10 @@ export default function SendDialog({ open, onClose, publicKey, balanceInfo }) {
 }
 
 function SendSplDialog({ onClose, publicKey, balanceInfo, onSubmitRef }) {
-  const defaultAddressHelperText = !balanceInfo.mint || balanceInfo.mint.equals(WRAPPED_SOL_MINT) ?
-    'Enter Solana Address' :
-    'Enter SPL token or Solana address';
+  const defaultAddressHelperText =
+    !balanceInfo.mint || balanceInfo.mint.equals(WRAPPED_SOL_MINT)
+      ? 'Enter Solana Address'
+      : 'Enter SPL token or Solana address';
   const wallet = useWallet();
   const [sendTransaction, sending] = useSendTransaction();
   const [addressHelperText, setAddressHelperText] = useState(
@@ -185,7 +189,7 @@ function SendSplDialog({ onClose, publicKey, balanceInfo, onSubmitRef }) {
         setPassValidation(undefined);
       }
     })();
-  }, [destinationAddress, wallet, mintString]);
+  }, [destinationAddress, wallet, mintString, defaultAddressHelperText]);
 
   async function makeTransaction() {
     let amount = Math.round(parseFloat(transferAmountString) * 10 ** decimals);

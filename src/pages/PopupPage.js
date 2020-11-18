@@ -186,7 +186,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 24,
   },
   warningTitle: {
-    color: theme.palette.warning.light,
+    color: 'black',
     fontWeight: 600,
     fontSize: 16,
     alignItems: 'center',
@@ -268,7 +268,7 @@ function ApproveConnectionForm({ origin, onApprove }) {
                 style={{ color: 'red' }}
                 onClick={() => setDismissed('1')}
               >
-                I understand
+                <Typography style={{ color: 'black' }}>I understand</Typography>
               </Button>,
             ]}
             classes={{ root: classes.snackbarRoot }}
