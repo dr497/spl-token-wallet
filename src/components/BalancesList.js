@@ -65,7 +65,7 @@ export default function BalancesList() {
           <Typography variant="h6" style={{ flexGrow: 1 }} component="h2">
             {selectedAccount && selectedAccount.name} Balances
           </Typography>
-          {selectedAccount && selectedAccount.name !== "Main account" &&
+          {selectedAccount && selectedAccount.name !== "Main account" && selectedAccount.name !== 'Hardware wallet' &&
             <Tooltip title="Edit Account Name" arrow>
               <IconButton onClick={() => setShowEditAccountNameDialog(true)}>
                 <EditIcon />
@@ -188,6 +188,7 @@ function BalanceListItemDetails({ publicKey, balanceInfo }) {
     closeTokenAccountDialogOpen,
     setCloseTokenAccountDialogOpen,
   ] = useState(false);
+  const wallet = useWallet()
 
   if (!balanceInfo) {
     return <LoadingIndicator delay={0} />;
@@ -201,10 +202,12 @@ function BalanceListItemDetails({ publicKey, balanceInfo }) {
 
   return (
     <>
-      <ExportAccountDialog
-        onClose={() => setExportAccDialogOpen(false)}
-        open={exportAccDialogOpen}
-      />
+      {wallet.allowsExport &&
+        <ExportAccountDialog
+          onClose={() => setExportAccDialogOpen(false)}
+          open={exportAccDialogOpen}
+        />
+      }
       <div className={classes.itemDetails}>
         <div className={classes.buttonContainer}>
           {!publicKey.equals(owner) && showTokenInfoDialog ? (
@@ -274,7 +277,7 @@ function BalanceListItemDetails({ publicKey, balanceInfo }) {
               </Link>
             </Typography>
           </div>
-          {exportNeedsDisplay && (
+          {exportNeedsDisplay && wallet.allowsExport && (
             <div>
               <Typography variant="body2">
                 <Link href={'#'} onClick={(e) => setExportAccDialogOpen(true)}>
