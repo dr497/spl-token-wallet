@@ -162,7 +162,7 @@ export const BalanceCardItem = ({ publicKey }) => {
         <CardContent>
           <center>
             <img
-              src={getImageSource(tokenSymbol)}
+              src={getImageSource(tokenSymbol).default}
               style={{ height: '80px', paddingTop: 5, paddingRight: 5 }}
               alt={tokenSymbol}
             />
