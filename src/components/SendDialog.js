@@ -463,9 +463,18 @@ function useForm(balanceInfo, addressHelperText, passAddressValidation) {
         margin="normal"
         type="number"
         InputProps={{
-          endAdornment: tokenSymbol ? (
-            <InputAdornment position="end">{tokenSymbol}</InputAdornment>
-          ) : null,
+          endAdornment:  (
+            <InputAdornment position="end">
+              <Button onClick={() =>
+                setTransferAmountString(
+                  balanceAmountToUserAmount(balanceAmount, decimals),
+                )
+              }>
+                MAX
+              </Button>
+              {tokenSymbol ? tokenSymbol : null}
+            </InputAdornment>
+          ),
           inputProps: {
             step: Math.pow(10, -decimals),
           },
@@ -476,11 +485,11 @@ function useForm(balanceInfo, addressHelperText, passAddressValidation) {
           <span
             onClick={() =>
               setTransferAmountString(
-                (balanceAmount / Math.pow(10, decimals)).toFixed(decimals),
+                balanceAmountToUserAmount(balanceAmount, decimals),
               )
             }
           >
-            Max: {balanceAmount / Math.pow(10, decimals)}
+            Max: {balanceAmountToUserAmount(balanceAmount, decimals)}
           </span>
         }
       />
@@ -494,6 +503,10 @@ function useForm(balanceInfo, addressHelperText, passAddressValidation) {
     setDestinationAddress,
     validAmount,
   };
+}
+
+function balanceAmountToUserAmount(balanceAmount, decimals) {
+  return (balanceAmount / Math.pow(10, decimals)).toFixed(decimals)
 }
 
 function EthWithdrawalCompleter({ ethAccount, publicKey }) {
