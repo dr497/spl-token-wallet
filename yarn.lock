@@ -1166,6 +1166,13 @@
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-10.1.0.tgz#f0950bba18819512d42f7197e56c518aa491cf18"
   integrity sha512-ij4wRiunFfaJxjB0BdrYHIH8FxBJpOwNPhhAcunlmPdXudL1WQV1qoP9un6JsEBAgQH+7UXyyjh0g7jTxXK6tg==
 
+"@dr497/awesome-serum-markets@^1.0.31":
+  version "1.0.31"
+  resolved "https://registry.yarnpkg.com/@dr497/awesome-serum-markets/-/awesome-serum-markets-1.0.31.tgz#c9e8461da83cde961663388339292380596167c8"
+  integrity sha512-lPlVkr1UBS3zTOZ7BTDI5pVqF4a83ZeB8zcH3bZp7DfLheFcgYTWRLUdpcL9GzGXjZtMT/mbJdrDC6AC9ttRvg==
+  dependencies:
+    "@solana/web3.js" "^0.87.1"
+
 "@emotion/hash@^0.8.0":
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/@emotion/hash/-/hash-0.8.0.tgz#bbbff68978fefdbe68ccb533bc8cbe1d1afb5413"
@@ -1808,7 +1815,7 @@
     tweetnacl "^1.0.0"
     ws "^7.0.0"
 
-"@solana/web3.js@^0.87.2":
+"@solana/web3.js@^0.87.1", "@solana/web3.js@^0.87.2":
   version "0.87.2"
   resolved "https://registry.yarnpkg.com/@solana/web3.js/-/web3.js-0.87.2.tgz#92c8d344695c6113d4e0eb3339117fbc6b22d0d2"
   integrity sha512-BtrOGfg7zUud/zLL/BxXV3E84qpXK1HknqncNQDNr8JlJ4tGc+Xsip5DzSMP/fNUJgbAWblHqWWJxFdN2mtO6A==

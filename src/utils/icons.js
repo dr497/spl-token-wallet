@@ -134,6 +134,8 @@ export const getImageSource = (symbol) => {
       return require('../assets/crypto/fida.svg');
     case 'LQID':
       return require('../assets/crypto/lqid.svg');
+    case 'KIN':
+      return require('../assets/crypto/kin.png');
     default:
       return require('../assets/crypto/other.png');
   }

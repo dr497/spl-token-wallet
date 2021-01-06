@@ -2,8 +2,9 @@ import EventEmitter from 'events';
 import { useConnectionConfig, MAINNET_URL } from '../connection';
 import { useListener } from '../utils';
 import { useCallback } from 'react';
+import { AWESOME_TOKENS } from '@dr497/awesome-serum-markets';
 
-export const TOKENS = {
+export let TOKENS = {
   [MAINNET_URL]: [
     {
       mintAddress: 'SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt',
@@ -204,6 +205,14 @@ export const TOKENS = {
     },
   ],
 };
+
+AWESOME_TOKENS.forEach((token) => {
+  TOKENS[MAINNET_URL].push({
+    tokenSymbol: token.name,
+    mintAddress: token.address,
+    tokenName: token.name,
+  });
+});
 
 const customTokenNamesByNetwork = JSON.parse(
   localStorage.getItem('tokenNames') ?? '{}',
