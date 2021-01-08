@@ -1,5 +1,12 @@
 export const getImageSource = (symbol) => {
+  if (symbol === 'USDC/ODOP') {
+    return require('../assets/crypto/odop.png');
+  }
+  if (symbol?.includes('/')) {
+    symbol = symbol.split('/')[0];
+  }
   switch (symbol) {
+    // Crypto
     case 'BTC':
       return require('../assets/crypto/btc.png');
     case 'ETH':
@@ -34,8 +41,6 @@ export const getImageSource = (symbol) => {
       return require('../assets/crypto/atom.png');
     case 'TRX':
       return require('../assets/crypto/trx.png');
-    case 'PAXG':
-      return require('../assets/crypto/pax.png');
     case 'ADA':
       return require('../assets/crypto/ada.png');
     case 'USDT':
@@ -112,8 +117,8 @@ export const getImageSource = (symbol) => {
       return require('../assets/crypto/ubxt.png');
     case 'UNI':
       return require('../assets/crypto/uni.png');
-    case 'LEND':
-      return require('../assets/crypto/aave.png');
+    case 'AAVE':
+      return require('../assets/crypto/aave.svg');
     case 'CREAM':
       return require('../assets/crypto/cream.png');
     case 'HGET':
@@ -128,14 +133,36 @@ export const getImageSource = (symbol) => {
       return require('../assets/crypto/front.png');
     case 'ALEPH':
       return require('../assets/crypto/aleph.png');
-    case 'USDC':
-      return require('../assets/crypto/usdc.png');
+    case 'OMG':
+      return require('../assets/crypto/omg.png');
+    case 'AKRO':
+      return require('../assets/crypto/akro.png');
+    case 'LUA':
+      return require('../assets/crypto/lua.png');
+    case 'MATH':
+      return require('../assets/crypto/math.png');
+    case 'HXRO':
+      return require('../assets/crypto/hxro.jpg');
+    case 'KEEP':
+      return require('../assets/crypto/keep.jpg');
     case 'FIDA':
       return require('../assets/crypto/fida.svg');
     case 'LQID':
       return require('../assets/crypto/lqid.svg');
-    case 'KIN':
-      return require('../assets/crypto/kin.png');
+    case 'USDC':
+      return require('../assets/crypto/usdc.svg');
+    case 'RSR':
+      return require('../assets/crypto/rsr.svg');
+    case 'CEL':
+      return require('../assets/crypto/cel.svg');
+    case 'PAXG':
+      return require('../assets/crypto/paxg.svg');
+    case '1INCH':
+      return require('../assets/crypto/1inch.png');
+    case 'GRT':
+      return require('../assets/crypto/grt.svg');
+
+    // Default
     default:
       return require('../assets/crypto/other.png');
   }

@@ -34,6 +34,11 @@ import DialogForm from './DialogForm';
 import { showSwapAddress } from '../utils/config';
 import { swapApiRequest } from '../utils/swap/api';
 import TokenIcon from './TokenIcon';
+import { AWESOME_TOKENS } from '@dr497/awesome-serum-markets';
+
+const isAwesomeToken = (tokenName) => {
+  return !!AWESOME_TOKENS.filter((t) => t.name === tokenName);
+};
 
 const feeFormat = new Intl.NumberFormat(undefined, {
   minimumFractionDigits: 6,
@@ -77,6 +82,10 @@ export default function AddTokenDialog({ open, onClose }) {
       params = { mintAddress, tokenName, tokenSymbol };
     } else if (tab === 'erc20') {
       params = { erc20Address };
+    }
+    console.log(isAwesomeToken(params.tokenName));
+    if (isAwesomeToken(params.tokenName)) {
+      params.mintAddress = params.mintAddress.toBase58();
     }
     sendTransaction(addToken(params), {
       onSuccess: () => {

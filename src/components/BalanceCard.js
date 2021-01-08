@@ -122,7 +122,10 @@ export default function BalancesList() {
         </Grid>
         {publicKeys.map((_, index) => (
           <Grid item>
-            <BalanceCardItem publicKey={publicKeys[index]} />
+            <BalanceCardItem
+              publicKey={publicKeys[index]}
+              key={`balance-card-item-${index}`}
+            />
           </Grid>
         ))}
 
