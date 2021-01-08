@@ -209,7 +209,7 @@ export let TOKENS = {
 AWESOME_TOKENS.forEach((token) => {
   TOKENS[MAINNET_URL].push({
     tokenSymbol: token.name,
-    mintAddress: token.address,
+    mintAddress: token.address.toBase58(),
     tokenName: token.name,
   });
 });
